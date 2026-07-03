@@ -1,107 +1,796 @@
 print("---Welcome to Mark's Coffee---")
-
-# ใช้ตัวแปรนี้ควบคุมให้ผู้ใช้พิมพ์ 1 เพื่อแสดงเมนูก่อน
-find_menu = 0
-
+find_menu = 0 #ตัวแปรสำหรับเข้าลูป while เพื่อเลือกMenu
+find_coffee = False #ตัวแปรสำหรับเข้าลูป while เพื่อเลืกเมนูกาแฟ
+find_type_coffee = False #ตัวแปรสำหรับเข้าลูป while เพื่อเลือกว่าต้องการกาแฟประเภทไหน
 while find_menu <= 0:
-    choose_menu = input("Please type 1 to show menu: ").strip()
-
+    choose_menu = input("Please type 1 to show menu: ")
     if choose_menu == "1":
         find_menu += 1
-
         print("""---Choose the menu---
-1. Espresso
-2. Cappuccino
-3. Latte""")
-
-        # วนลูปจนกว่าผู้ใช้จะเลือกเมนูกาแฟถูกต้อง
-        while True:
-            menu = input("Select Coffee: ").strip().lower()
-
-            if menu == "1" or menu == "espresso":
-                coffee_name = "Espresso"
-                break
-            elif menu == "2" or menu == "cappuccino":
-                coffee_name = "Cappuccino"
-                break
-            elif menu == "3" or menu == "latte":
-                coffee_name = "Latte"
-                break
-            else:
+        1. Espresso
+        2. Cappuccino
+        3. Latte""")
+        while find_coffee == False:
+            menu = input("Select Coffee: ")
+            if menu == "1" or menu == "Espresso" or menu == "espresso": #กรณีเลือกเมนูกาแฟ 1
+                print("""You chose Espresso coffee
+            ---Choose the type of the coffee---
+                1. Hot 55 baht
+                2. Cold 60 baht""")
+                find_coffee = True
+                while find_type_coffee == False:
+                    type_coffee = (input("Please choose hot or cold coffee.: ")) #ผู้ใช้เลือประเภทของกาแฟ
+                    if type_coffee == "1" or type_coffee == "Hot" or type_coffee == "hot" or type_coffee == "55": #ผู้ใช้เลือกาแฟร้อน
+                        print("---You chose hot Espresso 55 baht---")
+                        result = 0
+                        change = 0
+                        while True: #ลูปคำนวนเงิน
+                            money = (input("Input your money: "))
+                            if money.isdigit(): #กรณีท่ี่ผู้ใช้กรอกจำนวนเงินโดยที่ไม่มีทศนิยม
+                                money = int(money)
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                ---Please try again---""")
+                            elif "." in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย dot . หรือทศนิยม ภายใน input
+                                money = int(money.split(".")[0])
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %.f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %.f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                ---Please try again---""")
+                                else:
+                                    print("Error")
+                            elif "," in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย Comma , ภายใน input
+                                money = int(money.replace(",", ""))
+                                for i in money:
+                                    if i in range()
+                                if money > 55: #กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht"% result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55: #กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0: #กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht"% result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0: #กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0: #กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55: #กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55: #กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0: #กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                        ---Please try again---""")
+                            elif money.isalpha(): #กรณีผู้ใช้ใส่ข้อมูลผิด
+                                print("Invalid input! Please enter money value only.")
+                            else: #กรณีเงินติดลบ
+                                print("Negative amount entered. Please enter a positive number")
+                        find_type_coffee = True
+                    elif type_coffee == "2" or type_coffee == "Cold" or type_coffee == "cold" or type_coffee == "60": #ผู้ใช้เลือกาแฟเย็น
+                        print("---You chose cold Espresso 60 baht---")
+                        result = 0
+                        change = 0
+                        while True:  # ลูปคำนวนเงิน
+                            money = (input("Input your money: "))
+                            if money.isdigit(): #กรณีท่ี่ผู้ใช้กรอกจำนวนเงินโดยที่ไม่มีทศนิยม
+                                money = int(money)
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "." in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย dot . หรือทศนิยม ภายใน input
+                                money = int(money.split(".")[0])
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "," in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย Comma , ภายใน input
+                                money = int(money.replace(",", ""))
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f%f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif money.isalpha():  # กรณีผู้ใช้ใส่ข้อมูลผิด
+                                print("Invalid input! Please enter money value only.")
+                            else:  # กรณีเงินติดลบ
+                                print("Negative amount entered. Please enter a positive number")
+                        find_type_coffee = True
+                    else: #กรณีใส่ข้อมูลประเภทกาแฟผิด
+                        print("""Sorry, your choice is incorrect. Please try again.
+                    Type includes
+                    1. Hot 55 baht
+                    2. Cold 60 baht""")
+            elif menu == "2" or menu == "Cappuccino" or menu == "cappuccino": #กรณีเลือกเมนูกาแฟ 2
+                print("""You chose Cappuccino coffee
+            ---Choose the type of the coffee---
+                1. Hot 55 baht
+                2. Cold 60 baht""")
+                find_coffee = True
+                while find_type_coffee == False:
+                    type_coffee = (input("Please choose hot or cold coffee.: ")) #ผู้ใช้เลือประเภทของกาแฟ
+                    if type_coffee == "1" or type_coffee == "Hot" or type_coffee == "hot" or type_coffee == "55": #ผู้ใช้เลือกาแฟร้อน
+                        print("---You chose hot Cappuccino 55 baht---")
+                        result = 0
+                        change = 0
+                        while True:  # ลูปคำนวนเงิน
+                            money = (input("Input your money: "))
+                            if money.isdigit(): #กรณีท่ี่ผู้ใช้กรอกจำนวนเงินโดยที่ไม่มีทศนิยม
+                                money = int(money)
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "." in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย dot . หรือทศนิยม ภายใน input
+                                money = int(money.split(".")[0])
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "," in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย Comma , ภายใน input
+                                money = int(money.replace(",", ""))
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif money.isalpha():  # กรณีผู้ใช้ใส่ข้อมูลผิด
+                                print("Invalid input! Please enter money value only.")
+                            else: #กรณีเงินติดลบ
+                                print("Negative amount entered. Please enter a positive number")
+                        find_type_coffee = True
+                    elif type_coffee == "2" or type_coffee == "Cold" or type_coffee == "cold" or type_coffee == "60": #ผู้ใช้เลือกาแฟเย็น
+                        print("---You chose cold Cappuccino 60 baht---")
+                        result = 0
+                        change = 0
+                        while True:  # ลูปคำนวนเงิน
+                            money = (input("Input your money: "))
+                            if money.isdigit(): #กรณีท่ี่ผู้ใช้กรอกจำนวนเงินโดยที่ไม่มีทศนิยม
+                                money = int(money)
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "." in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย dot . หรือทศนิยม ภายใน input
+                                money = int(money.split(".")[0])
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "," in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย Comma , ภายใน input
+                                money = int(money.replace(",", ""))
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif money.isalpha():  # กรณีผู้ใช้ใส่ข้อมูลผิด
+                                print("Invalid input! Please enter money value only.")
+                            else: #กรณีเงินติดลบ
+                                print("Negative amount entered. Please enter a positive number")
+                        find_type_coffee = True
+                    else: #กรณีใส่ข้อมูลประเภทกาแฟผิด
+                        print("""Sorry, your choice is incorrect. Please try again.
+                    Type includes
+                    1. Hot 55 baht
+                    2. Cold 60 baht""")
+            elif menu == "3" or menu == "Latte" or menu == "latte": #กรณีเลือกเมนูกาแฟ 3
+                print("""You chose Latte coffee
+            ---Choose the type of the coffee---
+                1. Hot 55 baht
+                2. Cold 60 baht""")
+                find_coffee = True
+                while find_type_coffee == False:
+                    type_coffee = (input("Please choose hot or cold coffee.: ")) #ผู้ใช้เลือประเภทของกาแฟ
+                    if type_coffee == "1" or type_coffee == "Hot" or type_coffee == "hot" or type_coffee == "55": #ผู้ใช้เลือกาแฟร้อน
+                        print("---You chose hot Latte 55 baht---")
+                        result = 0
+                        change = 0
+                        while True:  # ลูปคำนวนเงิน
+                            money = (input("Input your money: "))
+                            if money.isdigit(): #กรณีท่ี่ผู้ใช้กรอกจำนวนเงินโดยที่ไม่มีทศนิยม
+                                money = int(money)
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "." in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย dot . หรือทศนิยม ภายใน input
+                                money = int(money.split(".")[0])
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "," in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย Comma , ภายใน input
+                                money = int(money.replace(",", ""))
+                                if money > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 55
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 55 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 55:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 55 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 55:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 55:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 55
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif money.isalpha():  # กรณีผู้ใช้ใส่ข้อมูลผิด
+                                print("Invalid input! Please enter money value only.")
+                            else: #กรณีเงินติดลบ
+                                print("Negative amount entered. Please enter a positive number")
+                        find_type_coffee = True
+                    elif type_coffee == "2" or type_coffee == "Cold" or type_coffee == "cold" or type_coffee == "60": #ผู้ใช้เลือกาแฟเย็น
+                        print("---You chose cold Latte 60 baht---")
+                        result = 0
+                        change = 0
+                        while True:  # ลูปคำนวนเงิน
+                            money = (input("Input your money: "))
+                            if money.isdigit(): #กรณีท่ี่ผู้ใช้กรอกจำนวนเงินโดยที่ไม่มีทศนิยม
+                                money = int(money)
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f%f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "." in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย dot . หรือทศนิยม ภายใน input
+                                money = int(money.split(".")[0])
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif "," in money: # กรณทีผู้ใช้กรอกจำนวนเงินโดยมีเครื่องหมาย Comma , ภายใน input
+                                money = int(money.replace(",", ""))
+                                if money > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    print("You received a change of %f baht" % result)
+                                    print("---Thank you---")
+                                    break
+                                elif money == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้
+                                    money -= 60
+                                    result += money
+                                    if result > 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    elif result == 0:  # กรณีที่มีเงินทอนในครั้งแรก แต้ต่อมากลับใส่ครบพอดี และไม่มีเงินทอนแล้ว
+                                        print("---Thank you---")
+                                        break
+                                elif money < 60 and money >= 0:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้
+                                    result += money
+                                    if result < 60:  # กรณีที่เงินน้อยกว่าราคาที่ตั้งไว้ ถึงแม้ว่าจะใส่เข้าไปเพิ่มแล้ว
+                                        change = 60 - result
+                                        print(
+                                            f"Insufficient funds. Please top up your balance with {change} baht and try again. ")
+                                    elif result == 60:  # กรณีที่เงินเท่ากับราคาที่ตั้งไว้หลังจากที่เรามีการใส่เข้าไปเพิ่ม
+                                        print("---Thank you---")
+                                        break
+                                    elif result > 60:  # กรณีที่เงินมากกว่าราคาที่ตั้งไว้หลังจากที่เราใส่เพิ่มเข้าไป
+                                        result -= 60
+                                        print("You received a change of %f baht" % result)
+                                        print("---Thank you---")
+                                        break
+                                    else:  # กรณีผู้ใช้ใส่ข้อมูลผิดหลังจากใส่เงินเพิ่มเข้าไปจากราคาตอนแรกที่ยังขาดอยู่
+                                        print("Invalid input! Please enter money value only.")
+                                elif money < 0:  # กรณีที่เงินติดลบ
+                                    print("""Negative amount entered. Please enter a positive number.
+                                               ---Please try again---""")
+                            elif money.isalpha():  # กรณีผู้ใช้ใส่ข้อมูลผิด
+                                print("Invalid input! Please enter money value only.")
+                            else: #กรณีเงินติดลบ
+                                print("Negative amount entered. Please enter a positive number")
+                        find_type_coffee = True
+                    else: #กรณีใส่ข้อมูลประเภทกาแฟผิด
+                        print("""Sorry, your choice is incorrect. Please try again.
+                    Type includes
+                    1. Hot 55 baht
+                    2. Cold 60 baht""")
+            else: #กรณีทีพิมพ์ผิด หรือไม่มีเมนูที่เลือก
                 print("""Sorry, your choice is incorrect. Please try again.
----Menu includes---
-1. Espresso
-2. Cappuccino
-3. Latte""")
-
-        print(f"""You chose {coffee_name} coffee
----Choose the type of the coffee---
-1. Hot 55 baht
-2. Cold 60 baht""")
-
-        # วนลูปจนกว่าผู้ใช้จะเลือกประเภทกาแฟถูกต้อง
-        while True:
-            type_coffee = input("Please choose hot or cold coffee: ").strip().lower()
-
-            if type_coffee == "1" or type_coffee == "hot" or type_coffee == "55":
-                coffee_type = "hot"
-                price = 55
-                break
-            elif type_coffee == "2" or type_coffee == "cold" or type_coffee == "60":
-                coffee_type = "cold"
-                price = 60
-                break
-            else:
-                print("""Sorry, your choice is incorrect. Please try again.
-Type includes
-1. Hot 55 baht
-2. Cold 60 baht""")
-
-        print(f"---You chose {coffee_type} {coffee_name} {price} baht---")
-
-        total = 0.0
-
-        # วนลูปรับเงินจนกว่าผู้ใช้จะจ่ายครบหรือเกินราคา
-        while True:
-            money_input = input("Input your money: ").strip()
-
-            # ปรับเพิ่ม: ลบ comma ออกจากจำนวนเงิน เช่น 1,000 -> 1000
-            money_input = money_input.replace(",", "")
-
-            # ปรับเพิ่ม: ตรวจว่าข้อมูลเป็นตัวเลขจริงหรือไม่
-            # เช่น 50dsf, abc50, 10baht จะเข้า except และแจ้งว่าให้กรอกตัวเลขเท่านั้น
-            try:
-                money = float(money_input)
-            except ValueError:
-                print("Invalid input! Please enter numbers only.")
-                continue
-
-            # ปรับเพิ่ม: ตรวจกรณีผู้ใช้กรอกเงินติดลบ เช่น -10, -50.5
-            if money < 0:
-                print("Negative amount entered. Please enter a positive number.")
-                continue
-
-            total += money
-
-            # กรณีที่เงินยังไม่พอ ให้บอกจำนวนเงินที่ยังขาด
-            if total < price:
-                remaining = price - total
-                print(f"Insufficient funds. Please top up your balance with {remaining:.2f} baht and try again.")
-
-            # กรณีที่เงินพอดีกับราคา
-            elif total == price:
-                print("---Thank you---")
-                break
-
-            # กรณีที่เงินมากกว่าราคา ให้ทอนเงิน
-            else:
-                change = total - price
-
-                # ปรับเพิ่ม: แสดงเงินทอนเป็นทศนิยม 2 ตำแหน่ง
-                # แก้ปัญหาเดิมที่ใช้ %f แล้วแสดงเป็น 945.000000
-                print(f"You received a change of {change:.2f} baht")
-                print("---Thank you---")
-                break
-
+            ---Menu includes--- 
+                1. Espresso
+                2. Cappuccino
+                3. Latte""")
     else:
         print("Please try again!")
